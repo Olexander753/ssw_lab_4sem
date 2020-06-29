@@ -1,5 +1,5 @@
-#ifndef SIMPLE_LINKED_LIST_H
-#define SIMPLE_LINKED_LIST_H
+#ifndef LAB2V2_SIMPLE_LIST_H
+#define LAB2V2_SIMPLE_LIST_H
 
 template<class T>
 class my_list {
@@ -267,25 +267,29 @@ template<class T>
 bool my_list<T>::contains(my_list<T>& list) {
 	if (list.size == 0)
 		return true;
-	node* tNode = head;
-	node* lNode = list.head;
+	if (list.size > size)
+		return false;
 
-	int k = 0;
+	node* f = head;
+	node* s = list.head;
+
 	for (int i = 0; i < size; i++) {
-		if (tNode->value == lNode->value) {
-			k++;
+		if (f->value == s->value) {
+			node* tmp = f;
+			int k = 0;
+			for (int j = 0; j < list.size; j++) {
+				if (tmp->value != s->value)
+					break;
+				tmp = tmp->linkNext ? tmp->linkNext : head;
+				s = s->linkNext;
+				k++;
+			}
 			if (k == list.size) {
 				return true;
 			}
-
-			lNode = lNode->linkNext;
+			s = list.head;
 		}
-		else {
-			k = 0;
-			lNode = list.head;
-		}
-
-		tNode = tNode->linkNext;
+		f = f->linkNext;
 	}
 
 	return false;
@@ -329,4 +333,5 @@ my_list<T>& my_list<T>::maxMin() {
 
 	return *res;
 }
+
 #endif

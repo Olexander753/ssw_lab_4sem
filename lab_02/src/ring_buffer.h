@@ -1,5 +1,5 @@
-#ifndef RING_BUFFER_H
-#define RING_BUFFER_H
+#ifndef LAB2V2_MY_RING_BUFFER_H
+#define LAB2V2_MY_RING_BUFFER_H
 
 template<class T>
 class my_ring_buffer {
@@ -191,25 +191,29 @@ template<class T>
 bool my_ring_buffer<T>::contains(my_ring_buffer<T>& list) {
 	if (list.size == 0)
 		return true;
-	node* tNode = head;
-	node* lNode = list.head;
+	if (list.size > size)
+		return false;
 
-	int k = 0;
+	node* f = head;
+	node* s = list.head;
+
 	for (int i = 0; i < size; i++) {
-		if (tNode->value == lNode->value) {
-			k++;
+		if (f->value == s->value) {
+			node* tmp = f;
+			int k = 0;
+			for (int j = 0; j < list.size; j++) {
+				if (tmp->value != s->value)
+					break;
+				tmp = tmp->linkNext;
+				s = s->linkNext;
+				k++;
+			}
 			if (k == list.size) {
 				return true;
 			}
-
-			lNode = lNode->linkNext;
+			s = list.head;
 		}
-		else {
-			k = 0;
-			lNode = list.head;
-		}
-
-		tNode = tNode->linkNext;
+		f = f->linkNext;
 	}
 
 	return false;
@@ -292,4 +296,6 @@ my_ring_buffer<T>::my_ring_buffer(const std::initializer_list<T>& list) {
 	tail = current;
 	current->linkNext = head;
 }
+
+
 #endif
